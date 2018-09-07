@@ -1,2 +1,1 @@
-# ams_dfy_stretch
-Apartment Management System for iBeads
+# Deify Infocomm Solutions Custom Integration for AMS for Debian Stretch
