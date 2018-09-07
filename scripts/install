@@ -135,23 +135,23 @@ rm -r $parent_dir/ams.zip
 # CREATE DEDICATED USER
 #=================================================
 
-ynh_system_user_create $app	# Create a dedicated system user for the app.
+ynh_system_user_create $appname	# Create a dedicated system user for the app.
 
 #=================================================
 # PHP-FPM CONFIGURATION
 #=================================================
 
 # Due to the use of $ appname, it is not possible to use ynh_fpm_config.
-finalphpconf="/etc/php/7.1/fpm/pool.d/$app.conf"
+finalphpconf="/etc/php/7.1/fpm/pool.d/$appname.conf"
 cp ../conf/php-fpm.conf "$finalphpconf"
 
-ynh_replace_string "__NAMETOCHANGE__" "$app" "$finalphpconf"
+ynh_replace_string "__NAMETOCHANGE__" "$appname" "$finalphpconf"
 ynh_replace_string "__FINALPATH__" "$final_path" "$finalphpconf"
-ynh_replace_string "__USER__" "$app" "$finalphpconf"
+ynh_replace_string "__USER__" "$appname" "$finalphpconf"
 
 chown root: "$finalphpconf"
 
-finalphpini="/etc/php/7.1/fpm/conf.d/20-$app.ini"
+finalphpini="/etc/php/7.1/fpm/conf.d/20-$appname.ini"
 cp ../conf/php-fpm.ini "$finalphpini"
 chown root: "$finalphpini"
 
@@ -163,7 +163,7 @@ systemctl reload php7.1-fpm
 
 # Due to the use of $ appname, it is not possible to use ynh_nginx_config
 
-finalnginxconf="/etc/nginx/conf.d/$domain.d/$app.conf"
+finalnginxconf="/etc/nginx/conf.d/$domain.d/$appname.conf"
 cp ../conf/nginx.conf "$finalnginxconf"
 
 if [ "$path_url" != "/" ]
@@ -173,7 +173,7 @@ fi
 ynh_replace_string "__PATH__/" "${path_url%/}/" "$finalnginxconf"
 ynh_replace_string "__PATH__" "$path_url" "$finalnginxconf"
 ynh_replace_string "__FINALPATH__" "$final_path" "$finalnginxconf"
-ynh_replace_string "__APPNAME__" "$app" "$finalnginxconf"
+ynh_replace_string "__APPNAME__" "$appname" "$finalnginxconf"
 
 #=================================================
 # GENERIC FINALISATION
@@ -182,7 +182,7 @@ ynh_replace_string "__APPNAME__" "$app" "$finalnginxconf"
 #=================================================
 
 chmod 775 -R $final_path
-chown -R $admin:$app $final_path
+chown -R $appname:$appname $final_path
 
 #=================================================
 # RELOAD NGINX
